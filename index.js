@@ -21,7 +21,12 @@ function optionsFromArguments(args) {
   let projectIdOrOptions = args[0];
   if (typeof projectIdOrOptions == 'string') {
     options.projectId = projectIdOrOptions;
-    options.keyFilename = args[1];
+    if(typeof args[1] === 'object') { // If object, assume it's credentials
+      options.credentials = args[1];
+    }
+    else {
+      options.keyFilename = args[1];
+    }
     options.bucket = args[2];
     let otherOptions = args[3];
     if (otherOptions) {
@@ -43,7 +48,10 @@ function optionsFromArguments(args) {
 supported options
 
 *projectId / 'GCP_PROJECT_ID'
-*keyFilename / 'GCP_KEYFILE_PATH'
+*keyFilename / 'GCP_KEYFILE_PATH' or credentials object credentials: {
+        client_email: xxx,
+        private_key: yyy
+      }
 *bucket / 'GCS_BUCKET'
 { bucketPrefix / 'GCS_BUCKET_PREFIX' defaults to ''
 directAccess / 'GCS_DIRECT_ACCESS' defaults to false
